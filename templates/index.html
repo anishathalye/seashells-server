@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seashells</title>
+    <link rel="stylesheet" href="/static/main.css">
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-53167467-6', 'auto');
+      ga('send', 'pageview');
+    </script>
+  </head>
+  <body>
+    <div id="content">
+      <h1>Seashells</h1>
+      <p>
+      Seashells lets you <em>pipe output from command-line programs to the
+      web in real-time</em>, even without installing any new software on
+      your machine. You can use it to monitor long-running processes like
+      experiments that print progress to the console. You can also use
+      Seashells to share output with friends!
+      </p>
+<pre>
+<span class="prompt">$</span> <span class="command">echo</span> <span class="data">'Hello, Seashells!'</span> <span class="control">|</span> <a href="http://nc110.sourceforge.net/">nc</a> seashells.io 1337
+<span class="response">serving at https://seashells.io/v/{random url}</span>
+</pre>
+      <h2>Client</h2>
+      <p>
+      While you can use <a href="http://nc110.sourceforge.net/">netcat</a>
+      for convenience (because it comes preinstalled on most systems), if you use
+      Seashells often, it's highly recommended that you install the
+      <a href="https://github.com/anishathalye/seashells">seashells</a> client.
+      You can install it by running <code>pip install seashells</code>.
+      </p>
+      <p>
+      Once you have the client installed, you can pipe output to <code>seashells</code>
+      instead of piping to <code>nc seashells.io 1337</code>. The client gives you
+      additional features, such as showing output on stdout as well as forwarding
+      to Seashells. Run <code>seashells --help</code> for more information
+      about using the client.
+      </p>
+      <h2>Examples</h2>
+      <ul>
+        <li>Show output on both stdout and Seashells:
+<pre>
+<span class="prompt">$</span> <span class="command">python</span> train.py <span class="control">|</span> <span class="command">seashells</span>
+<span class="response">serving at https://seashells.io/v/{url}
+Epoch 1/1000, loss = 12.483
+{...}</span>
+</pre>
+        </li>
+        <li>Show output on both stdout and Seashells using netcat:
+<pre>
+<span class="prompt">$</span> <span class="command">go</span> test <span class="flag">-v</span> <span class="control">|</span> <span class="command">tee</span> <span class="control">&gt;(</span><span class="command">nc</span> seashells.io 1337<span class="control">)</span>
+<span class="response">serving at https://seashells.io/v/{url}
+=== RUN   TestSeashellsBasic
+{...}</span>
+</pre>
+        </li>
+        <li>Show stdout and stderr on Seashells:
+<pre>
+<span class="prompt">$</span> <span class="command">npm</span> install <span class="control">2&gt;&amp;1</span> <span class="control">|</span> <span class="command">seashells</span>
+<span class="response">serving at https://seashells.io/v/{url}
+npm WARN prefer global node-gyp@3.6.2 should be installed with -g
+{...}</span>
+</pre>
+        </li>
+        <li>Have time to see URL before full-screen command:
+<pre>
+<span class="prompt">$</span> <span class="command">htop</span> <span class="control">|</span> <span class="command">seashells</span> <span class="flag">--delay</span> 5
+<span class="response">serving at https://seashells.io/v/{url}
+{5 second delay}
+{...}</span>
+</pre>
+        </li>
+      </ul>
+      <h2>Notes</h2>
+      <ul>
+        <li>
+          If you want plaintext output, replace the <code>/v/{url}</code> (for
+          view) with <code>/p/{url}</code> (for plaintext).
+        </li>
+        <li>
+          Seashells isn't meant for data storage: old sessions are garbage
+          collected after a period of one day.
+        </li>
+        <li>
+          Seashells currently doesn't have an accounts system, so each IP address
+          is limited to 5 concurrent sessions. This will likely change soon, and
+          you'll have access to more sessions if you're signed in and using
+          the <code>seashells</code> client.
+        </li>
+        <li>
+          Seashells is currently in beta. While we think the service is working
+          pretty well, we recommend that you don't use Seashells for any
+          uptime-critical applications.
+        </li>
+        <li>
+          If you have any feedback or feature requests, please send them to <a href="mailto:aathalye+seashells@mit.edu">aathalye+seashells@mit.edu</a>.
+        </li>
+      </ul>
+      <h2>Acknowledgements</h2>
+      <p>
+      Created by <a href="https://github.com/anishathalye">@anishathalye</a>.
+      </p>
+      <p>
+      Seashells builds on open-source technologies. In particular, Seashells
+      would not have been possible without the excellent
+      <a href="https://github.com/sourcelair/xterm.js">xterm.js</a>.
+      </p>
+    </div>
+  </body>
+</html>

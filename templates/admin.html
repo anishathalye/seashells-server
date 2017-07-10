@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seashells</title>
+    <link rel="stylesheet" href="/static/main.css">
+  </head>
+  <body>
+    <div id="content">
+      <h1>Admin</h1>
+      <h2>Sessions ({{ len .sessions }})</h2>
+      <ul class="compact">
+      {{ range .sessions }}
+      <li>{{ . }}</li>
+      {{ end }}
+      </ul>
+    </div>
+  </body>
+</html>
