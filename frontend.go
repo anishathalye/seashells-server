@@ -2,12 +2,12 @@ package main
 
 import (
 	"fmt"
+	"github.com/anishathalye/seashells-server/datamanager"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
 	"os"
-	"github.com/anishathalye/seashells-server/datamanager"
 	"time"
 )
 

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"math/rand"
 	"github.com/anishathalye/seashells-server/datamanager"
+	"math/rand"
 	"time"
 )
 

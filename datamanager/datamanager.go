@@ -2,8 +2,8 @@ package datamanager
 
 import (
 	"fmt"
-	mrand "math/rand"
 	"github.com/anishathalye/seashells-server/slidingbuffer"
+	mrand "math/rand"
 	"sync"
 	"time"
 )

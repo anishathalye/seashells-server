@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
+	"github.com/anishathalye/seashells-server/datamanager"
 	"io"
 	"log"
 	"net"
-	"github.com/anishathalye/seashells-server/datamanager"
 )
 
 func runNetcatServer(manager *datamanager.DataManager) {
