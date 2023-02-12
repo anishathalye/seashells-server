@@ -84,8 +84,12 @@ func runWeb(manager *datamanager.DataManager) {
 	r.StaticFile("/favicon.ico", "resources/favicon.ico")
 	r.LoadHTMLGlob("templates/*.html")
 
+	gtag := os.Getenv("GTAG")
+
 	r.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.html", gin.H{})
+		c.HTML(http.StatusOK, "index.html", gin.H{
+			"gtag": gtag,
+		})
 	})
 
 	r.GET("/v/:id", func(c *gin.Context) {
@@ -93,11 +97,13 @@ func runWeb(manager *datamanager.DataManager) {
 		if manager.Get(id) == nil {
 			c.HTML(http.StatusNotFound, "oops.html", gin.H{
 				"message": "Session not found.",
+				"gtag": gtag,
 			})
 			return
 		}
 		c.HTML(http.StatusOK, "terminal.html", gin.H{
 			"id": id,
+			"gtag": gtag,
 		})
 	})
 
@@ -118,6 +124,7 @@ func runWeb(manager *datamanager.DataManager) {
 	r.NoRoute(func(c *gin.Context) {
 		c.HTML(http.StatusNotFound, "oops.html", gin.H{
 			"message": "Page not found.",
+			"gtag": gtag,
 		})
 	})
 
