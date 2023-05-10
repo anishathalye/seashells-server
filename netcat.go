@@ -2,14 +2,26 @@ package main
 
 import (
 	"fmt"
-	"github.com/anishathalye/seashells-server/datamanager"
 	"io"
 	"log"
 	"net"
+
+	"github.com/anishathalye/seashells-server/config"
+	"github.com/caarlos0/env"
+
+	"github.com/anishathalye/seashells-server/datamanager"
 )
 
 func runNetcatServer(manager *datamanager.DataManager) {
-	ln, err := net.Listen("tcp", ":1337")
+
+	cfg := config.Config{}
+	if err := env.Parse(&cfg); err != nil {
+		fmt.Printf("failed to parse env vars: %v\n", err)
+		return
+	}
+
+	ln, err := net.Listen("tcp", cfg.NetCatBinding)
+
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -30,7 +42,7 @@ func runNetcatServer(manager *datamanager.DataManager) {
 				sess = manager.Create(remoteIp, id)
 			}
 			defer sess.Finalize()
-			conn.Write([]byte(fmt.Sprintf("serving at %s%s\n", baseUrl, id)))
+			conn.Write([]byte(fmt.Sprintf("serving at %s%s\n", cfg.BaseURL, id)))
 			buf := make([]byte, 4096)
 			for {
 				n, err := conn.Read(buf)
@@ -42,7 +54,7 @@ func runNetcatServer(manager *datamanager.DataManager) {
 				}
 				ok := sess.Append(buf[:n])
 				if !ok {
-					conn.Write([]byte(fmt.Sprintf("error: too many connections from your ip\n")))
+					conn.Write([]byte("error: too many connections from your ip\n"))
 					return
 				}
 			}

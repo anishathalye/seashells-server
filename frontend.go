@@ -2,13 +2,15 @@ package main
 
 import (
 	"fmt"
-	"github.com/anishathalye/seashells-server/datamanager"
-	"github.com/gin-gonic/gin"
-	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
-	"os"
 	"time"
+
+	"github.com/anishathalye/seashells-server/config"
+	"github.com/anishathalye/seashells-server/datamanager"
+	"github.com/caarlos0/env"
+	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
 )
 
 const minPasswordLength = 10
@@ -78,17 +80,26 @@ func wsHandler(w http.ResponseWriter, r *http.Request, manager *datamanager.Data
 }
 
 func runWeb(manager *datamanager.DataManager) {
+
+	cfg := config.Config{}
+	if err := env.Parse(&cfg); err != nil {
+		fmt.Printf("failed to parse env vars: %v\n", err)
+		return
+	}
+
+	fmt.Printf("%+v\n", cfg)
+
+	gin.SetMode(cfg.GinMode)
+
 	r := gin.Default()
 	r.Use(gin.Logger())
 	r.Static("/static", "static")
 	r.StaticFile("/favicon.ico", "resources/favicon.ico")
 	r.LoadHTMLGlob("templates/*.html")
 
-	gtag := os.Getenv("GTAG")
-
 	r.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.html", gin.H{
-			"gtag": gtag,
+			"gtag": cfg.Gtag,
 		})
 	})
 
@@ -97,13 +108,13 @@ func runWeb(manager *datamanager.DataManager) {
 		if manager.Get(id) == nil {
 			c.HTML(http.StatusNotFound, "oops.html", gin.H{
 				"message": "Session not found.",
-				"gtag": gtag,
+				"gtag":    cfg.Gtag,
 			})
 			return
 		}
 		c.HTML(http.StatusOK, "terminal.html", gin.H{
-			"id": id,
-			"gtag": gtag,
+			"id":   id,
+			"gtag": cfg.Gtag,
 		})
 	})
 
@@ -124,16 +135,15 @@ func runWeb(manager *datamanager.DataManager) {
 	r.NoRoute(func(c *gin.Context) {
 		c.HTML(http.StatusNotFound, "oops.html", gin.H{
 			"message": "Page not found.",
-			"gtag": gtag,
+			"gtag":    cfg.Gtag,
 		})
 	})
 
-	password := os.Getenv("ADMIN_PASSWORD")
-	if len(password) > minPasswordLength {
-		attachAdmin(r, password, manager)
+	if len(cfg.AdminPassword) > minPasswordLength {
+		attachAdmin(r, cfg.AdminPassword, manager)
 	}
 
-	r.Run()
+	r.Run(cfg.WebAppBinding)
 }
 
 func attachAdmin(base *gin.Engine, password string, manager *datamanager.DataManager) {
@@ -143,7 +153,7 @@ func attachAdmin(base *gin.Engine, password string, manager *datamanager.DataMan
 	admin.GET("/", func(c *gin.Context) {
 		var lines []string
 		for _, sess := range manager.All() {
-			lines = append(lines, fmt.Sprintf("%s", sess.String()))
+			lines = append(lines, sess.String())
 		}
 		c.HTML(http.StatusOK, "admin.html", gin.H{
 			"sessions": lines,
