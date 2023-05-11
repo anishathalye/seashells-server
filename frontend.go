@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/anishathalye/seashells-server/datamanager"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
@@ -97,12 +96,12 @@ func runWeb(manager *datamanager.DataManager) {
 		if manager.Get(id) == nil {
 			c.HTML(http.StatusNotFound, "oops.html", gin.H{
 				"message": "Session not found.",
-				"gtag": gtag,
+				"gtag":    gtag,
 			})
 			return
 		}
 		c.HTML(http.StatusOK, "terminal.html", gin.H{
-			"id": id,
+			"id":   id,
 			"gtag": gtag,
 		})
 	})
@@ -124,7 +123,7 @@ func runWeb(manager *datamanager.DataManager) {
 	r.NoRoute(func(c *gin.Context) {
 		c.HTML(http.StatusNotFound, "oops.html", gin.H{
 			"message": "Page not found.",
-			"gtag": gtag,
+			"gtag":    gtag,
 		})
 	})
 
@@ -143,7 +142,7 @@ func attachAdmin(base *gin.Engine, password string, manager *datamanager.DataMan
 	admin.GET("/", func(c *gin.Context) {
 		var lines []string
 		for _, sess := range manager.All() {
-			lines = append(lines, fmt.Sprintf("%s", sess.String()))
+			lines = append(lines, sess.String())
 		}
 		c.HTML(http.StatusOK, "admin.html", gin.H{
 			"sessions": lines,

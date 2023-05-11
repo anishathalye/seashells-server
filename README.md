@@ -1,4 +1,4 @@
-# Seashells
+# Seashells [![Build Status](https://github.com/anishathalye/seashells-server/workflows/CI/badge.svg)](https://github.com/anishathalye/seashells-server/actions?query=workflow%3ACI)
 
 The source code for the [seashells.io](https://seashells.io/) server. See the [anishathalye/seashells](https://github.com/anishathalye/seashells) repo for the client.
 

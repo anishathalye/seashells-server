@@ -42,7 +42,7 @@ func runNetcatServer(manager *datamanager.DataManager) {
 				}
 				ok := sess.Append(buf[:n])
 				if !ok {
-					conn.Write([]byte(fmt.Sprintf("error: too many connections from your ip\n")))
+					conn.Write([]byte("error: too many connections from your ip\n"))
 					return
 				}
 			}
