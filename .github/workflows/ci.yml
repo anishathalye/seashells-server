@@ -1,0 +1,29 @@
+name: CI
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '0 8 * * 6'
+jobs:
+  format:
+    name: Format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+      - name: Check gofmt
+        run: test -z $(gofmt -l .)
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: ^1.16
+      - name: Install dependencies
+        run: go install honnef.co/go/tools/cmd/staticcheck@latest
+      - name: Vet
+        run: go vet ./...
+      - name: Staticcheck
+        run: staticcheck -f stylish ./...
